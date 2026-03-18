@@ -1,0 +1,43 @@
+Admin Side
+Prioritas Tinggi
+Fitur	Deskripsi
+Dashboard Analytics	Total penjualan, pesanan hari ini, produk terlaris, grafik pendapatan
+Manajemen Order	List semua order, ubah status (pending → processing → shipped → delivered), filter by status
+Manajemen Produk	CRUD produk dengan upload multi-gambar, stok per ukuran (S/M/L/XL)
+Manajemen Kategori	CRUD kategori + upload thumbnail
+Prioritas Menengah
+Fitur	Deskripsi
+Manajemen Banner	Upload/edit banner homepage dengan urutan tampil
+Manajemen User	List user, lihat riwayat order per user, ban/unban
+Laporan Penjualan	Export Excel/PDF per periode
+Manajemen Stok	Alert stok menipis, history stok masuk/keluar
+Prioritas Rendah
+Fitur	Deskripsi
+Voucher/Diskon	Buat kode voucher dengan batas penggunaan & expired date
+Review Moderation	Approve/reject review produk dari user
+User Side
+Prioritas Tinggi
+Fitur	Deskripsi
+Riwayat Pesanan	List order dengan status real-time + detail per order
+Filter & Search Produk	Filter by kategori, harga, ukuran + pencarian keyword
+Pilih Ukuran di Cart	Tambah produk ke cart dengan pilihan ukuran (S/M/L/XL)
+Halaman Detail Produk	Galeri foto, deskripsi lengkap, pilih ukuran, tombol add to cart
+Prioritas Menengah
+Fitur	Deskripsi
+Edit Profil	Update nama, foto profil, alamat default, nomor HP
+Wishlist	Simpan produk favorit untuk dibeli nanti
+Review & Rating	Beri ulasan + bintang setelah order selesai
+Input Voucher	Masukkan kode voucher saat checkout untuk diskon
+Prioritas Rendah
+Fitur	Deskripsi
+Notifikasi	Status pesanan berubah (in-app notification)
+Multiple Alamat	Simpan beberapa alamat pengiriman
+Lacak Pesanan	Nomor resi + tracking via API ekspedisi
+Saran Urutan Pengerjaan
+
+1. Detail Produk (User)      → karena belum ada halaman ini
+2. Manajemen Order (Admin)   → inti bisnis
+3. Riwayat Pesanan (User)    → user perlu tahu status ordernya
+4. Dashboard Admin           → monitoring bisnis
+5. Filter/Search Produk      → UX penting
+6. Stok per Ukuran           → kebutuhan fashion store
