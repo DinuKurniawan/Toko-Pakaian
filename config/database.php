@@ -1,5 +1,6 @@
 <?php
 
+use App\Support\ServerlessRuntime;
 use Illuminate\Support\Str;
 use Pdo\Mysql;
 
@@ -35,7 +36,13 @@ return [
         'sqlite' => [
             'driver' => 'sqlite',
             'url' => env('DB_URL'),
-            'database' => env('DB_DATABASE', database_path('database.sqlite')),
+            'database' => ServerlessRuntime::sqliteDatabasePath(
+                (string) env('DB_DATABASE', database_path('database.sqlite')),
+                copyToTmp: (($copyToTmp = env('DB_SQLITE_COPY_TO_TMP')) === null || $copyToTmp === '')
+                    ? null
+                    : filter_var($copyToTmp, FILTER_VALIDATE_BOOL),
+                tempPath: env('DB_SQLITE_TMP_PATH')
+            ),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
             'busy_timeout' => null,

@@ -1,5 +1,6 @@
 <?php
 
+use App\Support\ServerlessRuntime;
 use Illuminate\Support\Str;
 
 return [
@@ -18,7 +19,7 @@ return [
     |
     */
 
-    'driver' => env('SESSION_DRIVER', 'database'),
+    'driver' => env('SESSION_DRIVER', ServerlessRuntime::defaultSessionDriver()),
 
     /*
     |--------------------------------------------------------------------------
@@ -60,7 +61,7 @@ return [
     |
     */
 
-    'files' => storage_path('framework/sessions'),
+    'files' => env('SESSION_FILES', ServerlessRuntime::sessionFilesPath()),
 
     /*
     |--------------------------------------------------------------------------
