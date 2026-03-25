@@ -7,8 +7,8 @@ use App\Models\Cart;
 use App\Models\Review;
 use App\Models\User;
 use App\Models\Wishlist;
+use App\Http\Controllers\ShippingController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -27,40 +27,13 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Voucher;
 use App\Support\AppCache;
+use App\Support\MediaStorage;
 
 $storeName = 'LUMIÈRE';
 $defaultSeoDescription = 'Belanja pakaian modern pria, wanita, dan unisex di LUMIÈRE. Temukan koleksi unggulan, promo terbaru, dan produk fashion favorit untuk gaya harian Anda.';
 $catalogProductColumns = ['id', 'name', 'price', 'category', 'image', 'is_featured'];
 
-$resolveMediaUrl = function (?string $path) {
-    if (!$path) {
-        return asset('favicon.ico');
-    }
-
-    $cleanPath = preg_replace('/^["\'\[]+|["\'\]]+$/', '', trim((string) $path));
-
-    if (str_starts_with($cleanPath, '[http') && str_contains($cleanPath, '](')) {
-        $cleanPath = Str::beforeLast(Str::after($cleanPath, ']('), ')');
-    }
-
-    if (Str::startsWith($cleanPath, ['http://', 'https://'])) {
-        return $cleanPath;
-    }
-
-    if (str_starts_with($cleanPath, '/storage/')) {
-        return url($cleanPath);
-    }
-
-    if (str_starts_with($cleanPath, 'storage/')) {
-        return url('/' . $cleanPath);
-    }
-
-    if (str_starts_with($cleanPath, '/')) {
-        return url('/storage' . $cleanPath);
-    }
-
-    return url('/storage/' . $cleanPath);
-};
+$resolveMediaUrl = fn (?string $path) => MediaStorage::url($path) ?? asset('favicon.ico');
 
 $cleanDescription = fn (?string $text, int $limit = 160) => Str::limit(
     trim(preg_replace('/\s+/', ' ', strip_tags((string) $text))),
@@ -608,30 +581,9 @@ Route::get('/dashboard', function () {
 
 // Route Proxy JagoOngkir
 Route::prefix('ongkir')->name('ongkir.')->group(function () {
-    Route::get('/provinces', function () {
-        $response = Http::withHeaders(['key' => env('JAGOONGKIR_API_KEY')])
-            ->get('https://api.jagoongkir.com/v1/province');
-        return $response->json();
-    })->name('provinces');
-
-    Route::get('/cities', function (Request $request) {
-        $response = Http::withHeaders(['key' => env('JAGOONGKIR_API_KEY')])
-            ->get('https://api.jagoongkir.com/v1/city', [
-                'province' => $request->province_id,
-            ]);
-        return $response->json();
-    })->name('cities');
-
-    Route::post('/cost', function (Request $request) {
-        $response = Http::withHeaders(['key' => env('JAGOONGKIR_API_KEY')])
-            ->post('https://api.jagoongkir.com/v1/cost', [
-                'origin'      => env('STORE_CITY_ID'),
-                'destination' => $request->city_id,
-                'weight'      => $request->weight,
-                'courier'     => $request->courier,
-            ]);
-        return $response->json();
-    })->name('cost');
+    Route::get('/provinces', [ShippingController::class, 'provinces'])->name('provinces');
+    Route::get('/cities', [ShippingController::class, 'cities'])->name('cities');
+    Route::post('/cost', [ShippingController::class, 'cost'])->name('cost');
 });
 
 // Route Checkout (Buat Pesanan dari Keranjang)

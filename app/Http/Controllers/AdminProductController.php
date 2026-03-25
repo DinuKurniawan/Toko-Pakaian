@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Support\AppCache;
+use App\Support\MediaStorage;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class AdminProductController extends Controller
@@ -80,21 +80,21 @@ class AdminProductController extends Controller
 
         if ($request->hasFile('image')) {
             if ($product !== null) {
-                $this->deletePublicFiles([$product->image]);
+                $this->deleteStoredFiles([$product?->getRawOriginal('image')]);
             }
 
-            $validated['image'] = $request->file('image')->store('products', 'public');
+            $validated['image'] = MediaStorage::store($request->file('image'), 'products');
         } elseif ($product !== null) {
             unset($validated['image']);
         }
 
         if ($request->hasFile('images')) {
             if ($product !== null) {
-                $this->deletePublicFiles($product->images ?? []);
+                $this->deleteStoredFiles($product->getRawOriginal('images') ? json_decode((string) $product->getRawOriginal('images'), true) : []);
             }
 
             $validated['images'] = collect($request->file('images'))
-                ->map(fn ($image) => $image->store('products', 'public'))
+                ->map(fn ($image) => MediaStorage::store($image, 'products'))
                 ->all();
         } elseif ($product !== null) {
             unset($validated['images']);
@@ -110,15 +110,8 @@ class AdminProductController extends Controller
         return $validated;
     }
 
-    private function deletePublicFiles(array $paths): void
+    private function deleteStoredFiles(array $paths): void
     {
-        $storedPaths = collect($paths)
-            ->filter(fn (?string $path) => filled($path) && !str_starts_with($path, 'http'))
-            ->values()
-            ->all();
-
-        if ($storedPaths !== []) {
-            Storage::disk('public')->delete($storedPaths);
-        }
+        MediaStorage::delete($paths);
     }
 }

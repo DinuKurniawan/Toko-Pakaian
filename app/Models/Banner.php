@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use App\Support\MediaStorage;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 
 class Banner extends Model
 {
@@ -18,10 +19,15 @@ class Banner extends Model
         'cta_link',
     ];
 
+    protected function image(): Attribute
+    {
+        return Attribute::make(
+            get: fn (?string $value) => MediaStorage::url($value)
+        );
+    }
+
     public function deleteStoredImage(): void
     {
-        if ($this->image && !str_starts_with($this->image, 'http')) {
-            Storage::disk('public')->delete($this->image);
-        }
+        MediaStorage::delete($this->getRawOriginal('image'));
     }
 }

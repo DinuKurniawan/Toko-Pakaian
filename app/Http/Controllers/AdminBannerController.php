@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Banner;
 use App\Support\AppCache;
+use App\Support\MediaStorage;
 use Illuminate\Http\Request;
 
 class AdminBannerController extends Controller
@@ -24,7 +25,7 @@ class AdminBannerController extends Controller
     {
         $validated = $this->validatedData($request, true);
 
-        $validated['image'] = $request->file('image')->store('banners', 'public');
+        $validated['image'] = MediaStorage::store($request->file('image'), 'banners');
 
         Banner::create($validated);
         AppCache::bustStorefront();
@@ -46,7 +47,7 @@ class AdminBannerController extends Controller
 
         if ($request->hasFile('image')) {
             $banner->deleteStoredImage();
-            $validated['image'] = $request->file('image')->store('banners', 'public');
+            $validated['image'] = MediaStorage::store($request->file('image'), 'banners');
         } else {
             unset($validated['image']);
         }

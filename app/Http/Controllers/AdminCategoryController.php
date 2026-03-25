@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Support\AppCache;
+use App\Support\MediaStorage;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -26,7 +27,7 @@ class AdminCategoryController extends Controller
         $validated = $this->validatedData($request);
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('categories', 'public');
+            $validated['image'] = MediaStorage::store($request->file('image'), 'categories');
         }
 
         Category::create($validated);
@@ -47,7 +48,7 @@ class AdminCategoryController extends Controller
 
         if ($request->hasFile('image')) {
             $category->deleteStoredImage();
-            $validated['image'] = $request->file('image')->store('categories', 'public');
+            $validated['image'] = MediaStorage::store($request->file('image'), 'categories');
         } else {
             unset($validated['image']);
         }

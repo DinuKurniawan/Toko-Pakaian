@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Support\MediaStorage;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
 {
@@ -33,6 +34,24 @@ class Product extends Model
         'sizes' => 'array',
         'stock' => 'array',
     ];
+
+    protected function image(): Attribute
+    {
+        return Attribute::make(
+            get: fn (?string $value) => MediaStorage::url($value)
+        );
+    }
+
+    protected function images(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => collect(is_array($value) ? $value : (json_decode((string) ($value ?? '[]'), true) ?: []))
+                ->map(fn (?string $path) => MediaStorage::url($path))
+                ->filter()
+                ->values()
+                ->all()
+        );
+    }
 
     public function reviews(): HasMany
     {
@@ -75,14 +94,14 @@ class Product extends Model
 
     public function deleteStoredMedia(): void
     {
-        $paths = collect([$this->image, ...($this->images ?? [])])
-            ->filter(fn (?string $path) => filled($path) && !str_starts_with($path, 'http'))
-            ->values()
-            ->all();
+        $rawImages = $this->getRawOriginal('images');
 
-        if ($paths !== []) {
-            Storage::disk('public')->delete($paths);
-        }
+        $paths = array_merge(
+            [$this->getRawOriginal('image')],
+            is_array($rawImages) ? $rawImages : (json_decode((string) ($rawImages ?? '[]'), true) ?: [])
+        );
+
+        MediaStorage::delete($paths);
     }
 
     public function getStockForSize(?string $size): int

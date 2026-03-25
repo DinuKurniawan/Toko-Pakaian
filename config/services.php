@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'jagoongkir' => [
+        'base_url' => env('JAGOONGKIR_BASE_URL', 'https://api.jagoongkir.com/v1'),
+        'key' => env('JAGOONGKIR_API_KEY'),
+        'origin_city_id' => env('STORE_CITY_ID'),
+    ],
+
 ];
