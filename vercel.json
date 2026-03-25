@@ -11,7 +11,7 @@
     "routes": [
         {
             "src": "/index.php",
-            "dest": "/api/index"
+            "dest": "/maintenance.html"
         },
         {
             "src": "/build/(.*)",
@@ -31,7 +31,7 @@
         },
         {
             "src": "/(.*)",
-            "dest": "/api/index"
+            "dest": "/maintenance.html"
         }
     ]
 }

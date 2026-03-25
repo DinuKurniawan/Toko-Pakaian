@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LUMIERE - Maintenance</title>
+    <meta name="robots" content="noindex,nofollow">
+    <style>
+        :root {
+            color-scheme: light dark;
+            --bg: #0f172a;
+            --panel: rgba(15, 23, 42, 0.82);
+            --text: #f8fafc;
+            --muted: #cbd5e1;
+            --accent: #f59e0b;
+            --border: rgba(255, 255, 255, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                radial-gradient(circle at top, rgba(245, 158, 11, 0.3), transparent 35%),
+                linear-gradient(135deg, #111827, var(--bg));
+            color: var(--text);
+            display: grid;
+            place-items: center;
+            padding: 24px;
+        }
+
+        main {
+            width: min(100%, 720px);
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 40px 32px;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.35);
+            text-align: center;
+            backdrop-filter: blur(16px);
+        }
+
+        .badge {
+            display: inline-block;
+            margin-bottom: 16px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(245, 158, 11, 0.18);
+            color: #fcd34d;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        h1 {
+            margin: 0 0 16px;
+            font-size: clamp(32px, 6vw, 48px);
+            line-height: 1.1;
+        }
+
+        p {
+            margin: 0 auto 16px;
+            max-width: 560px;
+            color: var(--muted);
+            font-size: 18px;
+            line-height: 1.7;
+        }
+
+        .note {
+            font-size: 15px;
+            color: #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="badge">Temporary Maintenance</div>
+        <h1>LUMIERE sedang dalam pemeliharaan</h1>
+        <p>
+            Kami sedang menyelesaikan konfigurasi production agar situs kembali berjalan dengan aman dan stabil.
+        </p>
+        <p class="note">
+            Silakan cek kembali beberapa saat lagi. Terima kasih atas kesabaran Anda.
+        </p>
+    </main>
+</body>
+</html>
